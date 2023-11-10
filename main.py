@@ -2,12 +2,11 @@ import re
 import datetime
 from functions import *
 
-
 run = True
 urls = []
 while run:
     user_input = input(
-        'Enter the urls like "https://www.patreon.com/creators-name". Type "end" to finish.\nYour urls: ')
+        'Enter the urls like "https://www.patreon.com/creator\'s-name". Type "end" to finish.\nYour urls: ')
     if user_input == 'end':
         break
     urls.append(user_input)
@@ -37,10 +36,15 @@ for url in urls:
         html_text = s.get(url, headers=headers).text
         campaign_id = re.search(r'https://www\.patreon\.com/api/campaigns/(\d+)', html_text).group(1)
         data = s.get(api_url, headers=headers,
-                     params={'filter[campaign_id]': campaign_id,
-                             'sort': '-published_at'}).json()
+                     params={'filter[campaign_id]': campaign_id}).json()
 
-    unpacked_data = unpack_data(data)
-    file_url, file_name = process_data(unpacked_data)
+    # An attempt to handle parsing data error while extracting an internal list
+    try:
+        scrapped_data, inner_list, attributes, info = data.items()
+    except:
+        scrapped_data, inner_list, attributes = data.items()
+
+    file_url, file_name = process_data_recursive(inner_list)
     content_to_download = dict(zip(file_name, file_url))
     download_file(content_to_download, folder_path)
+
