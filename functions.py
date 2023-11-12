@@ -3,12 +3,25 @@ import requests
 import fnmatch
 
 
-def process_data_recursive(data):
+def unpack_data(data):
+    values = list(data.values())
+    if len(values) == 4:
+        scrapped_data, inner_list, attributes, info = values
+    elif len(values) == 3:
+        scrapped_data, inner_list, attributes = values
+    else:
+        raise ValueError("Unexpected number of items in data")
+    return inner_list
+
+
+def process_data_recursive(data, extensions):
     """
     Processes data, extracts file URLs and file names.
 
     :param data: Data to be processed.
     :type data: list, dict or str
+    :param extensions: Extensions to be found among files.
+    :type extensions: list
     :return: List of file URLs and list of file names.
     :rtype: tuple
     """
@@ -26,13 +39,13 @@ def process_data_recursive(data):
         elif isinstance(item, str):
             if item.startswith('https://www.patreon.com/file?h'):
                 file_urls.append(item)
-            elif any(fnmatch.fnmatch(item, pattern) for pattern in ['*.package', '*.zip', '*.rar']):
+            elif any(fnmatch.fnmatch(item, pattern) for pattern in extensions):
                 file_names.append(item)
 
     for item in data:
         process_item(item)
 
-    return file_urls, file_names
+    return file_names, file_urls
 
 
 def download_file(content_to_download: dict, download_folder_path: str):
@@ -53,6 +66,6 @@ def download_file(content_to_download: dict, download_folder_path: str):
             if not os.path.exists(file_path):
                 with open(file_path, 'wb') as f:
                     f.write(response.content)
-                print(f'Saved: |{file_path}|')
+                print(f'Saved: |{name}|')
             else:
                 print(f'The file |{name}| already exists.')

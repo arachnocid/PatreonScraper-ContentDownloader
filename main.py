@@ -2,20 +2,38 @@ import re
 import datetime
 from functions import *
 
-run = True
 urls = []
-while run:
-    user_input = input(
-        'Enter the urls like "https://www.patreon.com/creator\'s-name". Type "end" to finish.\nYour urls: ')
-    if user_input == 'end':
+default_folder = r'C:\Sims 4 Mods -by PatreonScraper'
+extensions = []
+
+while True:
+    urls_input = input(
+        'Enter the urls like "https://www.patreon.com/creator\'s-name". Type "end" to finish.\nYour url: ')
+    if urls_input == 'end':
         break
-    urls.append(user_input)
+    urls.append(urls_input)
 
+while True:
+    extensions_input = input(
+        'Enter extensions like "zip". Type "end" to finish.\nYour extension: '
+    )
 
-download_folder = 'C:\\Sims 4 Mods -by PatreonScraper'
+    if extensions_input == 'end':
+        break
+    extensions.append(f'*.{extensions_input}')
+
+while True:
+    folder_input = input(
+        'Enter download folder path like "C:\\User\\Folder".\nType "default" to use default download folder path (C:\\Sims 4 Mods -by PatreonScraper).\nYour download folder path: '
+    )
+    if folder_input == 'default':
+        break
+    default_folder = folder_input
+    break
+
 current_date = datetime.datetime.now()
 date_str = current_date.strftime('%d-%m-%Y')
-folder_path = os.path.join(download_folder, f'Downloaded at {date_str}')
+folder_path = os.path.join(default_folder, f'Downloaded at {date_str}')
 
 
 if not os.path.exists(folder_path):
@@ -36,15 +54,12 @@ for url in urls:
         html_text = s.get(url, headers=headers).text
         campaign_id = re.search(r'https://www\.patreon\.com/api/campaigns/(\d+)', html_text).group(1)
         data = s.get(api_url, headers=headers,
-                     params={'filter[campaign_id]': campaign_id}).json()
+                     params={'filter[campaign_id]': campaign_id,
+                             'sort': '-published_at'}).json()
 
-    # An attempt to handle parsing data error while extracting an internal list
-    try:
-        scrapped_data, inner_list, attributes, info = data.items()
-    except:
-        scrapped_data, inner_list, attributes = data.items()
+        #print(json.dumps(data, indent=4))
 
-    file_url, file_name = process_data_recursive(inner_list)
-    content_to_download = dict(zip(file_name, file_url))
-    download_file(content_to_download, folder_path)
-
+    inner_list = unpack_data(data)
+    file_names, file_urls = process_data_recursive(inner_list, extensions)
+    content_to_download = dict(zip(file_names, file_urls))
+    download_file(content_to_download, default_folder)
