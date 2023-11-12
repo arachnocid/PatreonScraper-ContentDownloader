@@ -1,4 +1,4 @@
-# PatreonScraper-SimsModDownloader
+# PatreonScraper-ContentDownloader
 A Python scraper for downloading publicly available content from Patreon profiles without the need for authentication.
 
 ## Features
