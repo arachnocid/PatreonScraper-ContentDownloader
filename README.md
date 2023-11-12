@@ -9,11 +9,10 @@ A Python scraper for downloading publicly available content from Patreon profile
 ## Getting Started
 **Using the Executable (Windows):**
 1. Download the latest release from the "Releases" section.
-2. Extract the contents of the release package to your preferred location.
-3. Double-click the executable file (PatreonScraper.exe) to run the program.
-4. Follow the prompts to input URLs and extensions. Press the specific buttons after typing in each value.
-5. When finished and ready to download, press the "start" button. The program will begin downloading process.
-6. The script will efficiently organize and download publicly available content to the specified folder.
+2. Double-click the executable file (PatreonScraper.exe) to run the program.
+3. Follow the prompts to input URLs and extensions. Press the specific buttons after typing in each value.
+4. When finished and ready to download, press the "start" button. The program will begin downloading process.
+5. The script will efficiently organize and download publicly available content to the specified folder.
 
 **Running from Source Code:**
 1. Clone this repository to your local machine.
