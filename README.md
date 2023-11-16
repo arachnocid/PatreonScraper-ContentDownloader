@@ -16,10 +16,17 @@ A Python scraper for downloading publicly available content from Patreon profile
 
 **Running from Source Code:**
 1. Clone this repository to your local machine.
-2. Install the required dependencies (see requirements.txt)
+    ```bash
+   git clone https://github.com/arachnocid/PatreonScraper-ContentDownloader.git
+2. Navigate to the project directory.
+   ```bash
+   cd PatreonScraper-ContentDownloader
+3. Install the required dependencies (see requirements.txt)
+   ```bash
+   pip install -r requirements.txt
 4. Run the "main" or "interface--standalone" script (with PyQt6 interface implemented).
 5. Follow the prompts to input Patreon profile URLs and extensions. Press Enter (for main) or a specific button (for interface--standalone) after after typing in each value.
-7. The script will organize and download the publicly available content to the specified folder.
+6. The script will organize and download the publicly available content to the specified folder.
 
 ## .gitignore
 This repository uses the standard Python .gitignore file to exclude temporary files and Python virtual environments from version control.
